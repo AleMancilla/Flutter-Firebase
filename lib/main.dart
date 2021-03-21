@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/Authentication/Email/LoginEmail.dart';
 void main(){
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -22,13 +23,7 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
             title: 'Material App',
-            home: Scaffold(
-              body: Center(
-                child: Container(
-                  child: Text('Hello World'),
-                ),
-              ),
-            ),
+            home: LoginEmail(),
           );
         }
         // De lo contrario, muestre algo mientras espera a que se complete la inicialización
