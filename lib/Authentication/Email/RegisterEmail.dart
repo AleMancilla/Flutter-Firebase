@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/Authentication/Email/LoginEmail.dart';
+import 'package:flutter_firebase/Authentication/HomeScreen.dart';
 
 class RegisterEmail extends StatefulWidget {
   @override
@@ -97,6 +98,10 @@ class _RegisterEmailState extends State<RegisterEmail> {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailInput,
         password: passInput
+      );
+
+      Navigator.push(
+        context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

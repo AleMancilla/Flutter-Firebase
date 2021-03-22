@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/Authentication/Email/RegisterEmail.dart';
+import 'package:flutter_firebase/Authentication/HomeScreen.dart';
 
 class LoginEmail extends StatefulWidget {
 
@@ -99,6 +100,10 @@ class _LoginEmailState extends State<LoginEmail> {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailInput,
         password: passInput
+      );
+
+      Navigator.push(
+        context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
