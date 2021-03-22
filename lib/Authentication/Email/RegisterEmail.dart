@@ -21,8 +21,11 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
   @override
   void dispose() { 
-    _controllerEmail.dispose();
-    _controllerPass.dispose();
+    try {
+      _controllerEmail.dispose();
+      _controllerPass.dispose();
+    } catch (e) {
+    }
     super.dispose();
   }
 
@@ -80,7 +83,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                 _controllerEmail ${_controllerEmail.text}
                 _controllerPass ${_controllerPass.text}
                 """);
-                Navigator.push(
+                Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (BuildContext context) => LoginEmail())
                 );
               },
@@ -100,7 +103,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
         password: passInput
       );
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
       );
     } on FirebaseAuthException catch (e) {

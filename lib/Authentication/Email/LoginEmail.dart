@@ -16,8 +16,12 @@ class _LoginEmailState extends State<LoginEmail> {
 
   @override
   void dispose() { 
-    _controllerEmail.dispose();
-    _controllerPass.dispose();
+    try {
+      _controllerEmail.dispose();
+      _controllerPass.dispose();
+      
+    } catch (e) {
+    }
     super.dispose();
   }
 
@@ -38,9 +42,12 @@ class _LoginEmailState extends State<LoginEmail> {
         //   context, MaterialPageRoute(builder: (BuildContext context) => LoginEmail())
         // );
       } else {
-        Navigator.push(
-          context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
-        );
+        try {
+          Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
+          );
+        } catch (e) {
+        }
       }
     });
     
@@ -100,7 +107,7 @@ class _LoginEmailState extends State<LoginEmail> {
                 _controllerEmail ${_controllerEmail.text}
                 _controllerPass ${_controllerPass.text}
                 """);
-                Navigator.push(
+                Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (BuildContext context) => RegisterEmail())
                 );
               },
@@ -120,7 +127,7 @@ class _LoginEmailState extends State<LoginEmail> {
         password: passInput
       );
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
       );
     } on FirebaseAuthException catch (e) {
