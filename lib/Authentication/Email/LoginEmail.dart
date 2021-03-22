@@ -15,17 +15,35 @@ class _LoginEmailState extends State<LoginEmail> {
   TextEditingController _controllerPass;
 
   @override
-  void initState() {
-    _controllerEmail = TextEditingController();
-    _controllerPass = TextEditingController();
-    super.initState();
-  }
-
-  @override
   void dispose() { 
     _controllerEmail.dispose();
     _controllerPass.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    _controllerEmail = TextEditingController();
+    _controllerPass = TextEditingController();
+    _verificarEstadoSesion();
+    super.initState();
+  }
+
+  _verificarEstadoSesion(){
+    FirebaseAuth.instance
+    .authStateChanges()
+    .listen((User user) {
+      if (user == null) {
+        // Navigator.push(
+        //   context, MaterialPageRoute(builder: (BuildContext context) => LoginEmail())
+        // );
+      } else {
+        Navigator.push(
+          context, MaterialPageRoute(builder: (BuildContext context) => HomePage())
+        );
+      }
+    });
+    
   }
 
   @override
