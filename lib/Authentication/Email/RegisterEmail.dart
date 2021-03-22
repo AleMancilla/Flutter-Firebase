@@ -1,91 +1,111 @@
-  import 'package:flutter/material.dart';
-  import 'package:flutter_firebase/Authentication/Email/LoginEmail.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_firebase/Authentication/Email/LoginEmail.dart';
 
-  class RegisterEmail extends StatefulWidget {
-    @override
-    _RegisterEmailState createState() => _RegisterEmailState();
+class RegisterEmail extends StatefulWidget {
+  @override
+  _RegisterEmailState createState() => _RegisterEmailState();
+}
+
+class _RegisterEmailState extends State<RegisterEmail> {
+  TextEditingController _controllerEmail;
+  TextEditingController _controllerPass;
+
+  @override
+  void initState() {
+    _controllerEmail = TextEditingController();
+    _controllerPass = TextEditingController();
+    super.initState();
   }
 
-  class _RegisterEmailState extends State<RegisterEmail> {
-    TextEditingController _controllerEmail;
-    TextEditingController _controllerPass;
+  @override
+  void dispose() { 
+    _controllerEmail.dispose();
+    _controllerPass.dispose();
+    super.dispose();
+  }
 
-    @override
-    void initState() {
-      _controllerEmail = TextEditingController();
-      _controllerPass = TextEditingController();
-      super.initState();
-    }
-
-    @override
-    void dispose() { 
-      _controllerEmail.dispose();
-      _controllerPass.dispose();
-      super.dispose();
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(title: Text("REGISTRAR USUARIO"),),
-        body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              /////////// [EMAIL] ///////////////
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                child: TextField(
-                  controller: _controllerEmail,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email'
-                  ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("REGISTRAR USUARIO"),),
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            /////////// [EMAIL] ///////////////
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              child: TextField(
+                controller: _controllerEmail,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Email'
                 ),
               ),
-              /////////// [PASS] ///////////////
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                child: TextField(
-                  controller: _controllerPass,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Pass'
-                  ),
+            ),
+            /////////// [PASS] ///////////////
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              child: TextField(
+                controller: _controllerPass,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Pass'
                 ),
               ),
-              /////////// [BOTON REGISTRAR] ///////////////
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                ),
-                onPressed: () {
-                  print("""
-                  _controllerEmail ${_controllerEmail.text}
-                  _controllerPass ${_controllerPass.text}
-                  """);
-                },
-                child: Text("REGISTRAR USUARIO"),
+            ),
+            /////////// [BOTON REGISTRAR] ///////////////
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
               ),
-              /////////// [BOTON LOGIN] ///////////////
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey)
-                ),
-                onPressed: () {
-                  print("""
-                  _controllerEmail ${_controllerEmail.text}
-                  _controllerPass ${_controllerPass.text}
-                  """);
-                  Navigator.push(
-                    context, MaterialPageRoute(builder: (BuildContext context) => LoginEmail())
-                  );
-                },
-                child: Text("INICIA SESION"),
-              )
-            ],
-          ),
+              onPressed: () {
+                print("""
+                _controllerEmail ${_controllerEmail.text}
+                _controllerPass ${_controllerPass.text}
+                """);
+                _registrarUsuario(_controllerEmail.text,_controllerPass.text);
+              },
+              child: Text("REGISTRAR USUARIO"),
+            ),
+            /////////// [BOTON LOGIN] ///////////////
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey)
+              ),
+              onPressed: () {
+                print("""
+                _controllerEmail ${_controllerEmail.text}
+                _controllerPass ${_controllerPass.text}
+                """);
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (BuildContext context) => LoginEmail())
+                );
+              },
+              child: Text("INICIA SESION"),
+            )
+          ],
         ),
+      ),
+    );
+  }
+
+  _registrarUsuario(String emailInput, String passInput)async{
+    try {
+      /// El usuario se guardara en [userCredential] pueden almacenarlo si lo necesitan
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailInput,
+        password: passInput
       );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('La contraseña proporcionada es demasiado débil.');
+      } else if (e.code == 'email-already-in-use') {
+        print('La cuenta ya existe para ese correo electrónico.');
+      }
+    } catch (e) {
+      print(e);
     }
   }
+}
