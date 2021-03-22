@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/Authentication/Email/RegisterEmail.dart';
 
@@ -66,6 +67,7 @@ class _LoginEmailState extends State<LoginEmail> {
                 _controllerEmail ${_controllerEmail.text}
                 _controllerPass ${_controllerPass.text}
                 """);
+                _iniciarSesion(_controllerEmail.text,_controllerPass.text);
               },
               child: Text("INICIAR SESION"),
             ),
@@ -90,5 +92,20 @@ class _LoginEmailState extends State<LoginEmail> {
       ),
     );
   }
-  
+
+  _iniciarSesion(String emailInput, String passInput)async{
+    try {
+      /// El usuario se guardara en [userCredential] pueden almacenarlo si lo necesitan
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailInput,
+        password: passInput
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No se encontró ningún usuario para ese correo electrónico.');
+      } else if (e.code == 'wrong-password') {
+        print('Se proporcionó una contraseña incorrecta para ese usuario.');
+      }
+    }
+  }
 }
